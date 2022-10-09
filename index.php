@@ -10,51 +10,22 @@ function con_db(){
 $excel = new PhpExcelReader;
 $excel->setOutputEncoding("UTF-8");
 $excel->read('test.xls');
-$pdo = con_db();
-// Excel file data is stored in $sheets property, an Array of worksheets
-/*
-The data is stored in 'cells' and the meta-data is stored in an array called 'cellsInfo'
 
-Example (firt_sheet - index 0, second_sheet - index 1, ...):
-
-$sheets[0]  -->  'cells'  -->  row --> column --> Interpreted value
-         -->  'cellsInfo' --> row --> column --> 'type' (Can be 'date', 'number', or 'unknown')
-                                            --> 'raw' (The raw data that Excel stores for that data cell)
-*/
-
-// this function creates and returns a HTML table with excel rows and columns data
-// Parameter - array with excel worksheet data
 function sheetData($sheet) {
    echo $sheet['cells'][1][1];
-//  $re = '<table>';     // starts html table
-
-  $x = 65536;
-  while($x <= 70634) {
-//      for($x=1;$x++;$x<190000){
-//    $re .= "<tr>\n";
-//          if(!empty($sheet['cells'][$x][1])){
-
-
+   $x = 65536;
+   while($x <= 70634) {
     $y = 1;
-//    while($y <= $sheet['numCols']) {
-  //    $cell = isset($sheet['cells'][$x][$y]) ? $sheet['cells'][$x][$y] : '';
-//      $re .= " <td>$cell</td>\n";
       $pdo = con_db();
       $sth2 = $pdo->prepare('UPDATE  `attributesvalue`  SET
       `title_en`="'.$sheet['cells'][$x][2].'" where id = "'.$sheet['cells'][$x][1].'" ');
-    //  $sth2->execute();
-
+      $sth2->execute();
         echo $sheet['cells'][$x][1].'->';
         echo $sheet['cells'][$x][2].'-> imported<br/>';
 
-      $y++;
-//    }
-//    $re .= "</tr>\n";
     $x++;
-//          }
   }
 
-//  return $re .'</table>';     // ends and returns the html table
 }
 
 $nr_sheets = count($excel->sheets);       // gets the number of sheets
